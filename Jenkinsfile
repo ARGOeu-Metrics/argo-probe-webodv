@@ -26,8 +26,8 @@ pipeline {
                             cd ${WORKSPACE}/$PROJECT_DIR
                             rm -f tests/argo_probe_webodv
                             ln -s $PWD/modules/ tests/argo_probe_webodv
-                            coverage3 run -m unittest discover -v
-                            coverage3 xml --omit='*usr*'
+                            coverage3 run -m unittest discover --output-file junit.xml -v tests/
+                            coverage3 xml
                         '''
                         cobertura coberturaReportFile: '**/coverage.xml'
                     }
