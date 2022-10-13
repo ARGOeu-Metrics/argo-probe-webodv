@@ -24,6 +24,8 @@ pipeline {
                         echo 'Building Rpm...'
                         sh '''
                             cd ${WORKSPACE}/$PROJECT_DIR
+                            rm -f tests/argo_probe_webodv
+                            ln -s $PWD/modules/ tests/argo_probe_webodv
                             coverage3 run -m unittest discover -v
                             coverage3 xml --omit='*usr*'
                         '''
