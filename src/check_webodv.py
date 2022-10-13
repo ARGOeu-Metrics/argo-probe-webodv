@@ -16,6 +16,10 @@ def main():
         "-s", "--secret", dest="secret", type=str, required=True,
         help="secret"
     )
+    parser.add_argument(
+        "-t", "--timeout", dest="timeout", type=int, required=True,
+        help="timeout"
+    )
     args = parser.parse_args()
 
     data = {
@@ -54,7 +58,7 @@ def main():
     nagios_code = 0
 
     try:
-        analyse = Analyse(url=args.url, data=data)
+        analyse = Analyse(url=args.url, data=data, timeout=args.timeout)
         analyse.analyse()
         print("OK - Export successful")
 

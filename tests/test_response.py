@@ -48,7 +48,8 @@ class ResponseTests(unittest.TestCase):
     def setUp(self) -> None:
         self.analysis = Analyse(
             url="https://some.mock-url.com/api/test",
-            data={"key1": "value", "key2": "value"}
+            data={"key1": "value", "key2": "value"},
+            timeout=30
         )
 
     @mock.patch("requests.post")
@@ -59,7 +60,8 @@ class ResponseTests(unittest.TestCase):
         mock_post.assert_called_once_with(
             "https://some.mock-url.com/api/test",
             data=json.dumps({"key1": "value", "key2": "value"}),
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
+            timeout=30
         )
 
     @mock.patch("requests.post")
