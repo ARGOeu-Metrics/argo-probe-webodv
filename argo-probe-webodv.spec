@@ -33,3 +33,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %dir %{python3_sitelib}/%{underscore %{name}}/
 %{python3_sitelib}/%{underscore %{name}}/*.py
+%{_libexecdir}/argo/probes/webodv/*.py[o,c]
