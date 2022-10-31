@@ -34,3 +34,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{python3_sitelib}/%{underscore %{name}}/
 %{python3_sitelib}/%{underscore %{name}}/*.py
 %{_libexecdir}/argo/probes/webodv/*.py[o,c]
+
+%changelog
+* Thu Oct 27 2022 Katarina Zailac <kzailac@srce.hr> - 0.1.0-1
+- ARGO-4045 Create webODV probe
