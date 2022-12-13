@@ -7,9 +7,6 @@ from argo_probe_webodv.response import Analyse
 from argo_probe_webodv.logger import get_logger
 
 
-logger = get_logger()
-
-
 def main():
     parser = argparse.ArgumentParser("WebODV custom probe")
     parser.add_argument(
@@ -24,7 +21,14 @@ def main():
         "-t", "--timeout", dest="timeout", type=int, required=True,
         help="timeout"
     )
+    parser.add_argument(
+        "-l", "--logfile", dest="logfile", type=str,
+        default="/var/log/nagios/argo-probe-webodv.log",
+        help="location of log file"
+    )
     args = parser.parse_args()
+
+    logger = get_logger(filename=args.logfile)
 
     data = {
         "webodv_monitor_secret": args.secret,
@@ -63,7 +67,7 @@ def main():
     msg = "OK - Export successful"
 
     try:
-        logger.info(f"Probe invoked with {' '.join(sys.argv)}")
+        logger.info(f"Probe invoked as {' '.join(sys.argv)}")
         analyse = Analyse(url=args.url, data=data, timeout=args.timeout)
         analyse.analyse()
         logger.info(msg)
@@ -79,18 +83,19 @@ def main():
         logger.warning(msg)
 
     except Exception as e:
-        print("UNKNOWN - {}".format(str(e)))
+        msg = "UNKNOWN - {}".format(str(e))
         nagios_code = 3
         logger.error(msg)
 
     print(msg)
+    if nagios_code == 0:
+        logger.info(f"Probe exiting with code {nagios_code}...")
+
+    else:
+        logger.error(f"Probe exiting with code {nagios_code}...")
+
     sys.exit(nagios_code)
 
 
 if __name__ == "__main__":
-    try:
-        main()
-
-    except SystemExit as err:
-        if str(err) != "0":
-            logger.error(f"Probe exitted with error code {str(err)}")
+    main()
