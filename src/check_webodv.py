@@ -4,6 +4,10 @@ import sys
 
 from argo_probe_webodv.exceptions import CriticalException, WarningException
 from argo_probe_webodv.response import Analyse
+from argo_probe_webodv.logger import get_logger
+
+
+logger = get_logger()
 
 
 def main():
@@ -56,26 +60,37 @@ def main():
     }
 
     nagios_code = 0
+    msg = "OK - Export successful"
 
     try:
+        logger.info(f"Probe invoked with {' '.join(sys.argv)}")
         analyse = Analyse(url=args.url, data=data, timeout=args.timeout)
         analyse.analyse()
-        print("OK - Export successful")
+        logger.info(msg)
 
     except CriticalException as e:
-        print("CRITICAL - {}".format(str(e)))
+        msg = "CRITICAL - {}".format(str(e))
         nagios_code = 2
+        logger.error(msg)
 
     except WarningException as e:
-        print("WARNING - {}".format(str(e)))
+        msg = "WARNING - {}".format(str(e))
         nagios_code = 1
+        logger.warning(msg)
 
     except Exception as e:
         print("UNKNOWN - {}".format(str(e)))
         nagios_code = 3
+        logger.error(msg)
 
+    print(msg)
     sys.exit(nagios_code)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+
+    except SystemExit as err:
+        if str(err) != "0":
+            logger.error(f"Probe exitted with error code {str(err)}")
