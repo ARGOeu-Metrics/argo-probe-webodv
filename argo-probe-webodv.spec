@@ -1,3 +1,4 @@
+%global __python ${python3}
 %define underscore() %(echo %1 | sed 's/-/_/g')
 
 Summary:       ARGO probe that sends a POST request to webODV and checks that it is successful
@@ -33,7 +34,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %dir %{python3_sitelib}/%{underscore %{name}}/
 %{python3_sitelib}/%{underscore %{name}}/*.py
-%{_libexecdir}/argo/probes/webodv/*.py[o,c]
+%{_libexecdir}/argo/probes/webodv/*.py
 
 %changelog
 * Thu Oct 27 2022 Katarina Zailac <kzailac@srce.hr> - 0.1.0-1
