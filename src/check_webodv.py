@@ -63,12 +63,17 @@ def main():
         "branch": "default"
     }
 
+    # these are the default status_code and printed message if everything is ok
     nagios_code = 0
     msg = "OK - Export successful"
 
     try:
+        # we log start of probe execution and the return message in the logfile
         logger.info(f"Probe invoked as {' '.join(sys.argv)}")
         analyse = Analyse(url=args.url, data=data, timeout=args.timeout)
+        # if something is wrong, this part of code raises either
+        # WarningException or CriticalException, and the probes exits with
+        # the according status_code
         analyse.analyse()
         logger.info(msg)
 
@@ -83,6 +88,8 @@ def main():
         logger.warning(msg)
 
     except Exception as e:
+        # if there's been an unhandled exception, this would cause probe to
+        # exit with status_code 3 (UNKNOWN)
         msg = "UNKNOWN - {}".format(str(e))
         nagios_code = 3
         logger.error(msg)
